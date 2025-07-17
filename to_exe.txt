@@ -5,4 +5,4 @@ UBICAR FOLDER DONDE SE ENCUENTRA EL .py
 	cd C:\Users\YourName\Documents\my_pyqt_app
 
 METODO PARA CONVERTIR A .EXE SALTANDO ANTIVIRUS
-	pyinstaller --onefile --windowed --clean --noupx --add-data "gui_adjuntar.ui;." --add-data "img\\cesel.png;img" adjuntar_OOP_1.py
+	pyinstaller --onefile --clean --noupx --add-data "gui_adjuntar.ui;." --add-data "img\\cesel.png;img" cesel_attachpdf.py
