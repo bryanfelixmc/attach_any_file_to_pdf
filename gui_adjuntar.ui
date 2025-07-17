@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>493</width>
+    <width>448</width>
     <height>464</height>
    </rect>
   </property>
@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="pushButton_cargar_pdf_base">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>30</y>
+     <x>20</x>
+     <y>50</y>
      <width>121</width>
      <height>31</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QPushButton" name="pushButton_seleccionar_archivos">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>140</y>
+     <x>20</x>
+     <y>160</y>
      <width>121</width>
      <height>61</height>
     </rect>
@@ -42,8 +42,8 @@
   <widget class="QPushButton" name="pushButton_elegir_Carpeta_destino">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>300</y>
+     <x>20</x>
+     <y>320</y>
      <width>121</width>
      <height>31</height>
     </rect>
@@ -55,9 +55,9 @@
   <widget class="QListWidget" name="listWidget_archivos_seleccionados">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>80</y>
-     <width>256</width>
+     <x>160</x>
+     <y>100</y>
+     <width>261</width>
      <height>192</height>
     </rect>
    </property>
@@ -65,8 +65,8 @@
   <widget class="QLineEdit" name="lineEdit_cargar_pdf_base">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>30</y>
+     <x>160</x>
+     <y>50</y>
      <width>261</width>
      <height>31</height>
     </rect>
@@ -75,8 +75,8 @@
   <widget class="QLineEdit" name="lineEdit_carpeta_destino_elegida">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>300</y>
+     <x>160</x>
+     <y>320</y>
      <width>261</width>
      <height>31</height>
     </rect>
@@ -85,8 +85,8 @@
   <widget class="QPushButton" name="pushButton_ejecutar_programa">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>360</y>
+     <x>170</x>
+     <y>370</y>
      <width>121</width>
      <height>61</height>
     </rect>
@@ -98,11 +98,43 @@
   <widget class="QLineEdit" name="lineEdit_indicar_trabajo_terminado">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>370</y>
+     <x>320</x>
+     <y>390</y>
      <width>91</width>
      <height>31</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>380</y>
+     <width>101</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>img/cesel.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>361</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Incrustar cualquier archivo en PDF Base</string>
    </property>
   </widget>
  </widget>

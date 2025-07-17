@@ -21,7 +21,16 @@ from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog, QMessageBox
 from pypdf import PdfReader, PdfWriter
 
-UI_FILE = "gui_adjuntar.ui"
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+UI_FILE = resource_path("gui_adjuntar.ui")
 
 class EmbedFilesDialog(QDialog):
     def __init__(self):
@@ -34,6 +43,8 @@ class EmbedFilesDialog(QDialog):
         self.pushButton_seleccionar_archivos.clicked.connect(self.select_files)
         self.pushButton_elegir_Carpeta_destino.clicked.connect(self.choose_output_folder)
         self.pushButton_ejecutar_programa.clicked.connect(self.execute_embed)
+        # Hacer QLabel clickeable
+        self.label.mousePressEvent = self.show_message
 
     def load_base_pdf(self):
         path, _ = QFileDialog.getOpenFileName(self, "Seleccionar PDF base", "", "PDF Files (*.pdf)")
@@ -67,7 +78,7 @@ class EmbedFilesDialog(QDialog):
             return
         # Construir ruta de salida
         base = os.path.splitext(os.path.basename(input_pdf))[0]
-        output_pdf = os.path.join(output_dir, f"{base}_with_attachments.pdf")
+        output_pdf = os.path.join(output_dir, f"{base}_con_adjuntos.pdf")
         try:
             self.embed_files(input_pdf, self.selected_files, output_pdf)
         except Exception as e:
@@ -92,6 +103,8 @@ class EmbedFilesDialog(QDialog):
         with open(output_pdf_path, "wb") as out:
             writer.write(out)
 
+    def show_message(self, event):
+        QMessageBox.information(self, "Mensaje", "Desarrollado por bmalpartida")
 
 def main():
     app = QApplication(sys.argv)
