@@ -1,26 +1,9 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-"""
-embed_files_ui.py
-
-Aplicación PyQt5 para:
-  1) Cargar un PDF base
-  2) Seleccionar archivos para incrustar
-  3) Elegir carpeta destino
-  4) Ejecutar incrustación y mostrar estado
-
-Interfaz definida en 'dialog.ui' (Qt Designer).
-
-Dependencias:
-  pip install PyQt5 pypdf
-"""
 import os
 import sys
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog, QMessageBox, QListWidget
 from pypdf import PdfReader, PdfWriter
-
+import fitz
 
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller"""
@@ -74,7 +57,8 @@ class EmbedFilesDialog(QDialog):
         self.pushButton_clear1.clicked.connect(self.clear1)
 
         self.pushButton_elegir_Carpeta_destino.clicked.connect(self.choose_output_folder)
-        self.pushButton_ejecutar_programa.clicked.connect(self.execute_embed)
+        self.pushButton_incrustar.clicked.connect(self.execute_embed)
+        self.pushButton_eliminar_incrustados.clicked.connect(self.execute_desincrustar)
         # Hacer QLabel clickeable
         self.label.mousePressEvent = self.show_message
 
@@ -123,8 +107,49 @@ class EmbedFilesDialog(QDialog):
             QMessageBox.critical(self, "Error inesperado", str(e))
             return
         # Éxito
-        self.lineEdit_indicar_trabajo_terminado.setText("¡Listo!")
+        self.lineEdit_indicar_incrustado_ok.setText("¡Listo!")
         QMessageBox.information(self, "Completado", f"PDF generado:\n{output_pdf}")
+
+
+    def execute_desincrustar(self):
+        input_pdf = self.lineEdit_cargar_pdf_base.text().strip()
+        output_dir = self.lineEdit_carpeta_destino_elegida.text().strip()
+
+        # Validaciones
+        if not os.path.isfile(input_pdf):
+            QMessageBox.critical(self, "Error", f"PDF base no encontrado:\n{input_pdf}")
+            return
+        if not os.path.isdir(output_dir):
+            QMessageBox.critical(self, "Error", f"Carpeta destino no válida:\n{output_dir}")
+            return
+
+        # Construir ruta de salida
+        base = os.path.splitext(os.path.basename(input_pdf))[0]
+        output_pdf = os.path.join(output_dir, f"{base}_sin_adjuntos.pdf")
+
+        try:
+            eliminados = self.remove_all_attachments(input_pdf, output_pdf)
+        except Exception as e:
+            QMessageBox.critical(self, "Error inesperado", str(e))
+            return
+
+        # Éxito
+        self.lineEdit_indicar_desincrustado_ok.setText("¡Listo!")
+        if eliminados:
+            QMessageBox.information(
+                self,
+                "Completado",
+                f"Se eliminaron {len(eliminados)} adjuntos:\n" +
+                "\n".join(eliminados) +
+                f"\n\nPDF generado en:\n{output_pdf}"
+            )
+        else:
+            QMessageBox.information(
+                self,
+                "Completado",
+                f"No se encontraron adjuntos.\nPDF generado en:\n{output_pdf}"
+            )
+
 
     @staticmethod
     def embed_files(input_pdf_path: str, file_paths: list, output_pdf_path: str):
@@ -143,6 +168,26 @@ class EmbedFilesDialog(QDialog):
 
     def show_message(self, event):
         QMessageBox.information(self, "Mensaje", "Desarrollado por bmalpartida")
+
+    # --- función para eliminar adjuntos ---
+    @staticmethod
+    def remove_all_attachments(input_path: str, output_path: str):
+        if not os.path.isfile(input_path):
+            raise FileNotFoundError(f"No se encontró el archivo: {input_path}")
+
+        removed_files = []
+
+        with fitz.open(input_path) as doc:
+            attachments = doc.embfile_names()
+            if attachments:
+                for name in attachments:
+                    doc.embfile_del(name)
+                    removed_files.append(name)
+            doc.save(output_path, garbage=4, deflate=True)
+
+        return removed_files
+
+
 
 def main():
     app = QApplication(sys.argv)
